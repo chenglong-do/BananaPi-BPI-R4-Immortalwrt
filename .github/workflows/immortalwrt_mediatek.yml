@@ -104,7 +104,7 @@ jobs:
         uses: HiGarfield/cachewrtbuild@main
         with:
           ccache: false
-          mixkey: ${{ env.REPO_URL }}-${{ env.REPO_BRANCH }}-rk3588-t6
+          mixkey: ${{ env.REPO_URL }}-${{ env.REPO_BRANCH }}-mtk-r4
           prefix: ${{ env.OPENWRT_PATH }}
 
       - name: Update & install feeds
