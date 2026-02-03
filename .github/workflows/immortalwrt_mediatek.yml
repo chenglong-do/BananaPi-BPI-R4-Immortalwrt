@@ -11,6 +11,7 @@ env:
   CONFIG_FILE: immortalwrt/mediatek/defconfig
   DIY_P1_SH: immortalwrt/diy-part1.sh
   DIY_P2_SH: immortalwrt/diy-part2.sh
+  CACHE_TOOLCHAIN: true
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
   TZ: Asia/Shanghai
@@ -94,6 +95,17 @@ jobs:
       - name: Download firmware source code
         run: |
           git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+          cd openwrt
+          echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
+          cd ..
+
+      - name: Cache Toolchain
+        if: env.CACHE_TOOLCHAIN == 'true'
+        uses: HiGarfield/cachewrtbuild@main
+        with:
+          ccache: false
+          mixkey: ${{ env.REPO_URL }}-${{ env.REPO_BRANCH }}-rk3588-t6
+          prefix: ${{ env.OPENWRT_PATH }}
 
       - name: Update & install feeds
         working-directory: ./openwrt
