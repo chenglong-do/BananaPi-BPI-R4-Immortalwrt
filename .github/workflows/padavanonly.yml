@@ -141,6 +141,14 @@ jobs:
           cd openwrt
           echo -e "$(nproc) thread compile"
           sed -i 's/--set=llvm.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' package/feeds/packages/rust/Makefile
+          # Check for rejects...
+          if [ "`find $targetdir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print`" ] ; then
+              echo "Aborting.  Reject files found."
+              exit 1
+          fi
+          
+          # Remove backup files
+          find $targetdir/ '(' -name '*.orig' -o -name '.*.orig' ')' -exec rm -f {} \;
           make -j$(nproc) || make -j1 || make -j1 V=s
           echo "date1=$(date +'%Y.%m.%d')" >> $GITHUB_ENV
           echo "date2=$(date "+%Y-%m-%d")" >> $GITHUB_ENV
